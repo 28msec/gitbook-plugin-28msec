@@ -1,0 +1,25 @@
+{
+  "name": "gitbook-plugin-28msec",
+  "description": "Plugin for 28msec books",
+  "main": "index.js",
+  "version": "0.4.0",
+  "license": "Apache 2",
+  "author": "William Candillon <w@28.io>",
+  "engines": {
+    "gitbook": "*"
+  },
+  "homepage": "https://github.com/28msec/gitbook-plugin-28msec",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/28msec/gitbook-plugin-28msec.git"
+  },
+  "bugs": {
+    "url": "https://github.com/28msec/gitbook-plugin-28msec/issues"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-jshint": "^1.9.2",
+    "gulp-load-plugins": "^0.8.1"
+  }
+}
