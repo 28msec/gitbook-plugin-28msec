@@ -1,3 +1,7 @@
 .book .book-body .page-wrapper .page-inner section.normal .glossary-term {
     text-decoration: none !important;
 }
+
+h1 > a, h2 > a, h3 > a {
+    color: rgb(51, 51, 51) !important;
+}
