@@ -8,7 +8,7 @@
             projectName: 'secxbrl',
             token: 'c3049752-4d35-43da-82a2-f89f1b06f7a4'
         },
-        "edinet": {
+        edinet: {
             projectName: 'edinet',
             token: 'c3049752-4d35-43da-82a2-f89f1b06f7a4'
         }
@@ -28,7 +28,8 @@
                     var req = collection.requests.filter(function(request){
                         return request.id === args.id;
                     })[0];
-                    return `<pre><code class="lang-REST">${req.url.replace(/{{projectName}}/g, env.projectName).replace(/{{token}}/g, env.token)}</code></pre>`;
+                    var url = req.url.replace(/{{projectName}}/g, env.projectName).replace(/{{token}}/g, env.token);
+                    return `<pre><a href="${url}" target="_blank">${url}</a></pre>`;
                 }
             }
         }
