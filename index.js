@@ -28,10 +28,10 @@
                     var req = collection.requests.filter(function(request){
                         return request.id === args.id;
                     })[0];
-                    var url = req.url.replace(/{{projectName}}/g, env.projectName).replace(/{{token}}/g, env.token);
-                    return `<div class="example" id="${args.id}">
+                    var url = req.url.replace(/{{projectName}}/g, env.projectName);
+                    return `<div class="example">
     <p>${req.name}</p>
-    <a href="${url}" target="_blank">${url}</a>
+    <a href="${url.replace(/{{token}}/g, env.token)}" target="_blank">${url.replace(/&?\??token={{token}}/g, '')}</a>
                     </div>`;
                 }
             }
