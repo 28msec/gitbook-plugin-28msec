@@ -29,7 +29,10 @@
                         return request.id === args.id;
                     })[0];
                     var url = req.url.replace(/{{projectName}}/g, env.projectName).replace(/{{token}}/g, env.token);
-                    return `<pre><a href="${url}" target="_blank">${url}</a></pre>`;
+                    return `<div class="example" id="${args.id}">
+    <p>${req.name}</p>
+    <a href="${url}" target="_blank">${url}</a>
+                    </div>`;
                 }
             }
         }
