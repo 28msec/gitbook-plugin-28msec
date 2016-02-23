@@ -5,3 +5,11 @@
 h1 > a, h2 > a, h3 > a {
     color: rgb(51, 51, 51) !important;
 }
+
+.example {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+
+    color: #959595;
+}
