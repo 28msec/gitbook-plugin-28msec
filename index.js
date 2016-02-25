@@ -22,21 +22,24 @@
     };
 
     var curlSnippet = (method, url) => {
-        return `curl -X ${method} '<a href="${url}" target="_blank">${url}</a>'`;
+        return `curl -X ${method} &quot;<a href="${url}" target="_blank">${url}</a>&quot;`;
     };
 
     var jsSnippet = (method, url) => {
-        var op = operations[method.toLowerCase() + ':/api/filings'];
         var u = URL.parse(url, true);
+        var op = operations[method.toLowerCase() + ':' + u.pathname.substring('/v1/_queries/public'.length)];
         return `API.${op}({
     ${_.map(u.query, (value, key) => { return key + ': "' + value + '"'; }).join(',\n    ')}
 })`;
     };
 
-    var csharpSnippet = (method, url) => {
-        var op = operations[method.toLowerCase() + ':/api/filings'];
+    var csharpSnippet = (endpoint, method, url) => {
         var u = URL.parse(url, true);
-        return `API.${op}(
+        var op = operations[method.toLowerCase() + ':' + u.pathname.substring('/v1/_queries/public'.length)];
+        return `CellStore.Client.ApiClient client = new CellStore.Client.ApiClient(&quot;${endpoint}&quot;);
+CellStore.Api.DataApi api = new CellStore.Api.DataApi(client);
+
+api.${op[0].toUpperCase() + op.substring(1)}(
     ${_.map(u.query, (value, key) => { return key + ': "' + value + '"'; }).join(',\n    ')}
 )`;
     };
@@ -77,7 +80,7 @@
         <select onchange="generateSnippet(this)">
             <option value="curl" data="${escape(curlSnippet(method, url))}">cURL</option>
             <option value="js" data="${escape(jsSnippet(method, url))}">JavaScript</option>
-            <option value="csharp" data="${escape(csharpSnippet(method, url))}">C#</option>
+            <option value="csharp" data="${escape(csharpSnippet(env.endpoint, method, url))}">C#</option>
         </select>
     </p>
     <pre class="snippet">${curlSnippet(method, url)}</pre>
