@@ -2,6 +2,44 @@
     'use strict';
 
     var fs = require('fs');
+    var _ = require('lodash');
+    var URL = require('url');
+
+    var operations = {
+        "get:/api/entities": "listEntities",
+        "get:/api/filings": "listFilings",
+        "get:/api/periods": "listPeriods",
+        "get:/api/sections": "listSections",
+        "get:/api/components": "listComponents",
+        "get:/api/facttable-for-component": "listFactTable",
+        "get:/api/spreadsheet-for-component": "spreadsheetForComponent",
+        "get:/api/modelstructure-for-component": "listModelStructure",
+        "get:/api/facttable-for-report": "listFactTableForReport",
+        "get:/api/spreadsheet-for-report": "listSpreadsheetForReport",
+        "get:/api/facts": "listFacts",
+        "get:/api/labels": "listLabels",
+        "get:/api/report-elements": "listReportElements"
+    };
+
+    var curlSnippet = (method, url) => {
+        return `curl -X ${method} '<a href="${url}" target="_blank">${url}</a>'`;
+    };
+
+    var jsSnippet = (method, url) => {
+        var op = operations[method.toLowerCase() + ':/api/filings'];
+        var u = URL.parse(url, true);
+        return `API.${op}({
+    ${_.map(u.query, (value, key) => { return key + ': "' + value + '"'; }).join(',\n    ')}
+})`;
+    };
+
+    var csharpSnippet = (method, url) => {
+        var op = operations[method.toLowerCase() + ':/api/filings'];
+        var u = URL.parse(url, true);
+        return `API.${op}(
+    ${_.map(u.query, (value, key) => { return key + ': "' + value + '"'; }).join(',\n    ')}
+)`;
+    };
 
     var envs = {
         secxbrl: {
@@ -36,13 +74,13 @@
                     return `<div class="example">
     <p>${req.name}</p>
     <p>
-        <select onchange="generateSnippet(this, '${method}', '${url}')">
-            <option value="curl">cURL</option>
-            <option value="js">JavaScript</option>
-            <option value="csharp">C#</option>
+        <select onchange="generateSnippet(this)">
+            <option value="curl" data="${escape(curlSnippet(method, url))}">cURL</option>
+            <option value="js" data="${escape(jsSnippet(method, url))}">JavaScript</option>
+            <option value="csharp" data="${escape(csharpSnippet(method, url))}">C#</option>
         </select>
     </p>
-    <pre class="snippet">curl -X ${method} '<a href="${url}" target="_blank">${url}</a>'</pre>
+    <pre class="snippet">${curlSnippet(method, url)}</pre>
     <div class="postman-run-button" data-postman-action="collection/import" data-postman-var-1="d7a107824b4f4517d21b"></div>
                     </div>`;
                 }
