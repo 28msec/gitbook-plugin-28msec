@@ -29,7 +29,7 @@
         var u = URL.parse(url, true);
         var op = operations[method.toLowerCase() + ':' + u.pathname.substring('/v1/_queries/public'.length)];
         return `API.${op}({
-    ${_.map(u.query, (value, key) => { return key + ': "' + value + '"'; }).join(',\n    ')}
+    ${_.map(u.query, (value, key) => { return `'${key}': '${value}'`; }).join(',\n    ')}
 })`;
     };
 
@@ -84,7 +84,7 @@ api.${op[0].toUpperCase() + op.substring(1)}(
         </select>
     </p>
     <pre class="snippet">${curlSnippet(method, url)}</pre>
-    <div class="postman-run-button" data-postman-action="collection/import" data-postman-var-1="d7a107824b4f4517d21b"></div>
+    <!--div class="postman-run-button" data-postman-action="collection/import" data-postman-var-1="d7a107824b4f4517d21b"></div-->
                     </div>`;
                 }
             }
