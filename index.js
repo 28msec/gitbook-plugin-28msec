@@ -5,6 +5,8 @@
     var _ = require('lodash');
     var URL = require('url');
 
+    var api = require('swagger-aggregated.json');
+
     var operations = {
         "get:/api/entities": "listEntities",
         "get:/api/filings": "listFilings",
@@ -28,6 +30,13 @@
     var jsSnippet = (method, url) => {
         var u = URL.parse(url, true);
         var op = operations[method.toLowerCase() + ':' + u.pathname.substring('/v1/_queries/public'.length)];
+        _.forEach(api.paths, path => {
+            _.forEach(path, o => {
+                if(o.operationId === op) {
+                    console.log(o);
+                }
+            });
+        });
         return `API.${op}({
     ${_.map(u.query, (value, key) => { return `'${key}': '${value}'`; }).join(',\n    ')}
 })`;
@@ -76,8 +85,14 @@ api.${op[0].toUpperCase() + op.substring(1)}(
                     var url = req.url.replace(/{{endpoint}}/g, env.endpoint).replace(/{{token}}/g, env.token);
                     return `<div class="example">
     <p>${req.name}</p>
+ <p>
+ <select onchange="generateSnippet(this)">
+ <option value="curl" data="${escape(curlSnippet(method, url))}">cURL</option>
+ <option value="js" data="${escape(jsSnippet(method, url))}">JavaScript</option>
+ <option value="csharp" data="${escape(csharpSnippet(env.endpoint, method, url))}">C#</option>
+ </select>
+ </p>
     <pre class="snippet">${curlSnippet(method, url)}</pre>
-    <!--div class="postman-run-button" data-postman-action="collection/import" data-postman-var-1="d7a107824b4f4517d21b"></div-->
                     </div>`;
                 }
             }
@@ -86,11 +101,4 @@ api.${op[0].toUpperCase() + op.substring(1)}(
 }());
 
 /*
- <p>
- <select onchange="generateSnippet(this)">
- <option value="curl" data="${escape(curlSnippet(method, url))}">cURL</option>
- <option value="js" data="${escape(jsSnippet(method, url))}">JavaScript</option>
- <option value="csharp" data="${escape(csharpSnippet(env.endpoint, method, url))}">C#</option>
- </select>
- </p>
  */
