@@ -5,7 +5,7 @@
     var _ = require('lodash');
     var URL = require('url');
 
-    var api = require('swagger-aggregated.json');
+    var api = require('./swagger-aggregated.json');
 
     var operations = {
         "get:/api/entities": "listEntities",
