@@ -7,49 +7,45 @@
 
     var api = require('./swagger-aggregated.json');
 
-    var operations = {
-        "get:/api/entities": "listEntities",
-        "get:/api/filings": "listFilings",
-        "get:/api/periods": "listPeriods",
-        "get:/api/sections": "listSections",
-        "get:/api/components": "listComponents",
-        "get:/api/facttable-for-component": "listFactTable",
-        "get:/api/spreadsheet-for-component": "spreadsheetForComponent",
-        "get:/api/modelstructure-for-component": "listModelStructure",
-        "get:/api/facttable-for-report": "listFactTableForReport",
-        "get:/api/spreadsheet-for-report": "listSpreadsheetForReport",
-        "get:/api/facts": "listFacts",
-        "get:/api/labels": "listLabels",
-        "get:/api/report-elements": "listReportElements"
-    };
-
     var curlSnippet = (method, url) => {
         return `curl -X ${method} &quot;<a href="${url}" target="_blank">${url}</a>&quot;`;
     };
 
+    var serializeJSValue = (param, value) => {
+        if(_.isArray(value)) {
+            return value.map(v => serializeJSValue(v));
+        } else {
+            try {
+                return JSON.parse(value);
+            } catch(e) {
+                return value;
+            }
+        }
+    };
+
     var jsSnippet = (method, url) => {
         var u = URL.parse(url, true);
-        var op = operations[method.toLowerCase() + ':' + u.pathname.substring('/v1/_queries/public'.length)];
-        _.forEach(api.paths, path => {
-            _.forEach(path, o => {
-                if(o.operationId === op) {
-                    console.log(o);
-                }
-            });
-        });
-        return `API.${op}({
-    ${_.map(u.query, (value, key) => { return `'${key}': '${value}'`; }).join(',\n    ')}
+        var resource = api.paths[u.pathname.substring('/v1/_queries/public'.length)];
+        var op = resource[method.toLowerCase()];
+        return `API.${op.operationId}({
+        ${op.parameters
+            .filter(param => !param['x-exclude-from-bindings'])
+            .filter(param => u.query[param.name])
+            .map(param => `'${param.name}': ${JSON.stringify(serializeJSValue(param, u.query[param.name]))}`).join(',\n     ')}
 })`;
     };
 
     var csharpSnippet = (endpoint, method, url) => {
         var u = URL.parse(url, true);
-        var op = operations[method.toLowerCase() + ':' + u.pathname.substring('/v1/_queries/public'.length)];
+        var resource = api.paths[u.pathname.substring('/v1/_queries/public'.length)];
+        var op = resource[method.toLowerCase()];
         return `CellStore.Client.ApiClient client = new CellStore.Client.ApiClient(&quot;${endpoint}&quot;);
 CellStore.Api.DataApi api = new CellStore.Api.DataApi(client);
 
-api.${op[0].toUpperCase() + op.substring(1)}(
-    ${_.map(u.query, (value, key) => { return key + ': "' + value + '"'; }).join(',\n    ')}
+api.${op.operationId[0].toUpperCase() + op.operationId.substring(1)}(${op.parameters
+            .filter(param => !param['x-exclude-from-bindings'])
+            .filter(param => u.query[param.name])
+            .map(param => `'${param.name}': ${JSON.stringify(serializeJSValue(param, u.query[param.name]))}`).join(',\n     ')}
 )`;
     };
 
@@ -101,4 +97,5 @@ api.${op[0].toUpperCase() + op.substring(1)}(
 }());
 
 /*
+
  */
