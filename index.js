@@ -45,7 +45,7 @@ CellStore.Api.DataApi api = new CellStore.Api.DataApi(client);
 api.${op.operationId[0].toUpperCase() + op.operationId.substring(1)}(${op.parameters
             .filter(param => !param['x-exclude-from-bindings'])
             .filter(param => u.query[param.name])
-            .map(param => `'${param.name}': ${JSON.stringify(serializeJSValue(param, u.query[param.name]))}`).join(',\n     ')}
+            .map(param => `${param.name}: ${JSON.stringify(serializeJSValue(param, u.query[param.name]))}`).join(',\n     ')}
 )`;
     };
 
