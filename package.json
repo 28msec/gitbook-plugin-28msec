@@ -2,7 +2,7 @@
   "name": "gitbook-plugin-28msec",
   "description": "Plugin for 28msec books",
   "main": "index.js",
-  "version": "0.6.8",
+  "version": "0.6.9",
   "license": "Apache 2",
   "author": "William Candillon <w@28.io>",
   "engines": {
