@@ -41,13 +41,6 @@
                     var url = req.url.replace(/{{endpoint}}/g, env.endpoint).replace(/{{token}}/g, env.token);
                     return `<div class="example">
     <p>${req.name}</p>
- <!--p>
- <select onchange="generateSnippet(this)">
- <option value="curl" data="${escape(curlSnippet(method, url))}">cURL</option>
- <option value="js" data="${escape(jsSnippet(method, url))}">JavaScript</option>
- <option value="csharp" data="${escape(csharpSnippet(env.endpoint, method, url))}">C#</option>
- </select>
- </p-->
     <pre class="snippet">${curlSnippet(method, url)}</pre>
                     </div>`;
                 }
