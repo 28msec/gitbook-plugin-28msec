@@ -38,7 +38,7 @@
                         return request.id === args.id;
                     })[0];
                     var method = req.method;
-                    var url = req.url.replace(/{{endpoint}}/g, env.endpoint).replace(/{{token}}/g, env.token);
+                    var url = req.request.url.replace(/{{endpoint}}/g, env.endpoint).replace(/{{token}}/g, env.token);
                     return `<div class="example">
     <p>${req.name}</p>
     <pre class="snippet">${curlSnippet(method, url)}</pre>
