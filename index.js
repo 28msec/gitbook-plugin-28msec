@@ -5,7 +5,7 @@
     var _ = require('lodash');
     var URL = require('url');
 
-    var api = require('./swagger-aggregated.json');
+    var api = require('./swagger.json');
 
     var curlSnippet = (method, url) => {
         return `curl -X ${method} &quot;<a href="${url}" target="_blank">${url}</a>&quot;`;
@@ -74,7 +74,7 @@ api.${op.operationId[0].toUpperCase() + op.operationId.substring(1)}(${op.parame
                     var args = block.kwargs;
                     var collection = JSON.parse(fs.readFileSync(args.collection, 'utf-8'));
                     var env = envs[args.env];
-                    var req = collection.requests.filter(function(request){
+                    var req = collection.item.filter(function(request){
                         return request.id === args.id;
                     })[0];
                     var method = req.method;
