@@ -37,7 +37,7 @@
                     var req = collection.item.filter(function(request){
                         return request.id === args.id;
                     })[0];
-                    var method = req.method;
+                    var method = req.request.method;
                     var url = req.request.url.replace(/{{endpoint}}/g, env.endpoint).replace(/{{token}}/g, env.token);
                     return `<div class="example">
     <p>${req.name}</p>
