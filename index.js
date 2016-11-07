@@ -35,12 +35,12 @@
                     var collection = JSON.parse(fs.readFileSync(args.collection, 'utf-8'));
                     var env = envs[args.env];
                     var req = collection.item.filter(function(request){
-                        return request.id === args.id;
+                        return request.name === args.id;
                     })[0];
                     var method = req.request.method;
                     var url = req.request.url.replace(/{{endpoint}}/g, env.endpoint).replace(/{{token}}/g, env.token);
                     return `<div class="example">
-    <p>${req.name}</p>
+    <p>${req.request.description}</p>
     <pre class="snippet">${curlSnippet(method, url)}</pre>
                     </div>`;
                 }
